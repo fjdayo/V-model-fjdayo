@@ -9,7 +9,7 @@ for arg in "$@"; do
     case "$arg" in
         --check) check=1 ;;
         --codex) codex=1 ;;
-        -h|--help) sed -n '2,4p' "$0"; exit 0 ;;
+        -h|--help) sed -n '2,3p' "$0" | sed 's/^# //'; exit 0 ;;
         *) echo "unknown option: $arg" >&2; exit 2 ;;
     esac
 done

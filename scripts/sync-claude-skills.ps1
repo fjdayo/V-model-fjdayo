@@ -7,8 +7,8 @@ Run with -Check for a read-only preview. Existing custom skills are preserved.
 param([switch]$Check)
 
 $ErrorActionPreference = 'Stop'
-$claudeRoot = Join-Path $env:USERPROFILE '.claude'
-$codexRoot = Join-Path $env:USERPROFILE '.codex'
+$claudeRoot = if ($env:CLAUDE_HOME) { $env:CLAUDE_HOME } else { Join-Path $env:USERPROFILE '.claude' }
+$codexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }
 $skillsRoot = Join-Path $codexRoot 'skills'
 $sharedRoot = Join-Path $env:USERPROFILE '.agents\skills'
 $marker = '<!-- managed-by: sync-claude-skills.ps1 v1 -->'

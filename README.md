@@ -52,6 +52,14 @@ US-*  ユーザーストーリー ───────────────�
 
 ## インストール
 
+### 前提
+
+- **Claude Code**（`/vmodel` はスラッシュコマンドとして動く）
+- Windows は **PowerShell 7 以降**、macOS / Linux は POSIX sh
+- 任意: Phase 4 の実装は [superpowers](https://github.com/obra/superpowers) の
+  `test-driven-development` スキルに従う。未導入でも動くが、その場合はプロジェクト既存の
+  TDD 規約（`CLAUDE.md` 等）が優先される
+
 ```sh
 git clone https://github.com/fjdayo/V-model-fjdayo.git
 cd V-model-fjdayo
@@ -77,7 +85,7 @@ pwsh -File scripts/install.ps1 -Codex    # Codex (~/.codex) にも入れる
 
 どちらのスクリプトも **冪等**（再実行しても変更が無ければ `current` と表示するだけ）で、
 **同名の自作スキルは上書きしない**（`preserved` として報告される）。
-インストール先は `CLAUDE_HOME` / `CODEX_HOME` 環境変数で変更できる。
+インストール先は `CLAUDE_HOME` / `CODEX_HOME` 環境変数で変更できる（Windows / macOS / Linux とも）。
 
 ### Codex 側の仕組み
 
