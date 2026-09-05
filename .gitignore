@@ -1,0 +1,5 @@
+# generated Codex adapters (contain machine-specific absolute paths)
+.codex/
+
+# vmodel outputs
+docs/vmodel/
