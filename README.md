@@ -52,43 +52,43 @@ US-*  ユーザーストーリー ───────────────�
 
 ## インストール
 
-**要件**: PowerShell 7 以降（Windows）。
-
-```powershell
+```sh
 git clone https://github.com/fjdayo/V-model-fjdayo.git
 cd V-model-fjdayo
+```
 
-# まず何が起きるか確認（何も書き換えない）
-pwsh -File scripts/install.ps1 -Check
+### Windows (PowerShell 7+)
 
-# Claude Code (~/.claude) に導入
-pwsh -File scripts/install.ps1
+```powershell
+pwsh -File scripts/install.ps1 -Check    # まず何が起きるか確認（何も書き換えない）
+pwsh -File scripts/install.ps1           # Claude Code (~/.claude) に導入
+pwsh -File scripts/install.ps1 -Codex    # Codex (~/.codex) にも入れる
+```
 
-# Codex (~/.codex) にも入れる場合
-pwsh -File scripts/install.ps1 -Codex
+### macOS / Linux
+
+```sh
+./scripts/install.sh --check     # まず何が起きるか確認（何も書き換えない）
+./scripts/install.sh             # Claude Code (~/.claude) に導入
+./scripts/install.sh --codex     # Codex (~/.codex) にも入れる
 ```
 
 導入後、Claude Code で `/vmodel <機能名>` が使える。
 
+どちらのスクリプトも **冪等**（再実行しても変更が無ければ `current` と表示するだけ）で、
+**同名の自作スキルは上書きしない**（`preserved` として報告される）。
+インストール先は `CLAUDE_HOME` / `CODEX_HOME` 環境変数で変更できる。
+
 ### Codex 側の仕組み
 
-`-Codex` を付けると `scripts/sync-claude-skills.ps1` が動く。
+**Windows** (`-Codex`) は `scripts/sync-claude-skills.ps1` を呼ぶ。
 
 - **スキル**は `~/.claude/skills/` への junction を張る（実体は1つ、常に同期）
 - **コマンドとエージェント**は Codex 用のアダプタ SKILL.md を生成する。アダプタは実行時に `~/.claude/` 側の原典を読むので、原典を直せば追従する
 
-既存の自作スキルは上書きしない（`Preserved` として報告される）。
+**macOS / Linux** (`--codex`) はスキルの symlink を張る。symlink が使えない環境（開発者モード無効の Git Bash 等）では自動的にコピーへフォールバックするが、**コピーは原典の更新を追わない**ため、`~/.claude` を更新したら再実行が必要（その旨は実行時に表示される）。
 
-### 非Windows環境
-
-現状スクリプトは PowerShell (Windows) 専用。mac / Linux では手動でコピーする。
-
-```sh
-mkdir -p ~/.claude/commands ~/.claude/agents ~/.claude/skills
-cp commands/*.md   ~/.claude/commands/
-cp agents/*.md     ~/.claude/agents/
-cp -r skills/vmodel-* ~/.claude/skills/
-```
+コマンド・エージェントのCodexアダプタ生成はPowerShell版のみ。非Windowsでは `~/.claude/commands` と `~/.claude/agents` を直接参照する。
 
 ## 使い方
 

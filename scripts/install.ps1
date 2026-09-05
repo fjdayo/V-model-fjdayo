@@ -8,7 +8,7 @@ param([switch]$Check, [switch]$Codex)
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$claudeRoot = Join-Path $env:USERPROFILE '.claude'
+$claudeRoot = if ($env:CLAUDE_HOME) { $env:CLAUDE_HOME } else { Join-Path $env:USERPROFILE '.claude' }
 
 function Copy-Item-Tracked([string]$Source, [string]$Destination) {
     $exists = Test-Path -LiteralPath $Destination -PathType Leaf
