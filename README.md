@@ -84,8 +84,16 @@ pwsh -File scripts/install.ps1 -Codex    # Codex (~/.codex) にも入れる
 導入後、Claude Code で `/vmodel <機能名>` が使える。
 
 どちらのスクリプトも **冪等**（再実行しても変更が無ければ `current` と表示するだけ）で、
-**同名の自作スキルは上書きしない**（`preserved` として報告される）。
+**インストール先に既にあるものは一切壊さない** — 自作スキル・平ファイル・自前の symlink のいずれも
+`preserved` として報告し、触らない。`--check` / `-Check` は1バイトも書き込まない。
+
 インストール先は `CLAUDE_HOME` / `CODEX_HOME` 環境変数で変更できる（Windows / macOS / Linux とも）。
+
+動作確認:
+
+```sh
+./scripts/smoke.sh    # 一時ディレクトリ内で完結。実際の ~/.claude には触れない
+```
 
 ### Codex 側の仕組み
 

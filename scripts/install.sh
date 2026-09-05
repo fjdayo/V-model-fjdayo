@@ -62,22 +62,23 @@ if [ "$codex" -eq 1 ]; then
             echo "  current   $link"
             continue
         fi
-        if [ -d "$link" ] && [ ! -L "$link" ]; then
-            if cmp -s "$link/SKILL.md" "$target/SKILL.md"; then
-                echo "  current   $link"
-            else
-                # A real directory with different content: someone's own skill. Never clobber it.
-                echo "  preserved $link"
-            fi
+        if [ -d "$link" ] && [ ! -L "$link" ] && cmp -s "$link/SKILL.md" "$target/SKILL.md"; then
+            echo "  current   $link"
+            continue
+        fi
+        # Anything else already at this path is the user's: a plain file, a
+        # directory of their own, or a symlink pointing somewhere we did not
+        # put it. Never destroy it -- this is the only branch that deletes.
+        if [ -e "$link" ] || [ -L "$link" ]; then
+            echo "  preserved $link"
             continue
         fi
         if [ "$check" -eq 1 ]; then
-            echo "  would link $link"
+            echo "  would link $link (or copy if symlinks are unavailable)"
             continue
         fi
 
         mkdir -p "$codex_root/skills"
-        rm -rf -- "$link"
         if ln -s -- "$target" "$link" 2>/dev/null && [ -L "$link" ]; then
             echo "  linked    $link"
         else

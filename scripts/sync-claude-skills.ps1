@@ -10,7 +10,9 @@ $ErrorActionPreference = 'Stop'
 $claudeRoot = if ($env:CLAUDE_HOME) { $env:CLAUDE_HOME } else { Join-Path $env:USERPROFILE '.claude' }
 $codexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }
 $skillsRoot = Join-Path $codexRoot 'skills'
-$sharedRoot = Join-Path $env:USERPROFILE '.agents\skills'
+# Windows-only script; the backslash path is deliberate. AGENTS_HOME follows
+# CLAUDE_HOME/CODEX_HOME so a redirected install is fully sandboxed.
+$sharedRoot = if ($env:AGENTS_HOME) { Join-Path $env:AGENTS_HOME 'skills' } else { Join-Path $env:USERPROFILE '.agents\skills' }
 $marker = '<!-- managed-by: sync-claude-skills.ps1 v1 -->'
 $results = [System.Collections.Generic.List[object]]::new()
 $seen = @{}

@@ -40,7 +40,17 @@ foreach ($directory in Get-ChildItem (Join-Path $repoRoot 'skills') -Directory) 
 if ($Codex) {
     Write-Output 'Codex sync:'
     $sync = Join-Path $PSScriptRoot 'sync-claude-skills.ps1'
-    if ($Check) { & $sync -Check } else { & $sync }
+    if ($Check) {
+        # The sync reads what is already installed under $claudeRoot, so on a
+        # first run -Check has nothing to see yet and honestly reports zero.
+        # Say so, rather than letting the preview imply there is no work.
+        if (!(Test-Path -LiteralPath (Join-Path $claudeRoot 'skills'))) {
+            Write-Output "  (nothing installed at $claudeRoot yet; the apply run will sync all skills, commands and agents)"
+        }
+        & $sync -Check
+    } else {
+        & $sync
+    }
 }
 
 if ($Check) { Write-Output "`nPreview only. Re-run without -Check to apply." }
